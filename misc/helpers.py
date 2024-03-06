@@ -214,7 +214,7 @@ def generate_prompts(bench, model_name):
 
 
 # MODEL standardization
-def config_model(model_name, generate=True, dtype=torch.bfloat16):
+def config_model(model_name, generate=True, dtype=torch.bfloat16,quantize=False):
     ngpus = torch.cuda.device_count()
     tokenizer = AutoTokenizer.from_pretrained(model_name,model_max_length=4096,padding_side='left')
     if not generate: return(tokenizer, None,None)
@@ -223,15 +223,30 @@ def config_model(model_name, generate=True, dtype=torch.bfloat16):
 
     prompt_type = None
     model_type = model_name.split('/')[-1]
+
+    if not quantize:
+        model = AutoModelForCausalLM.from_pretrained(
+                model_name,
+                device_map="auto",
+                torch_dtype=dtype,
+                offload_folder="offload",
+            )
+    else:
+        model = AutoModelForCausalLM.from_pretrained(
+                model_name,
+                device_map="auto",
+                torch_dtype=torch.float32,
+                quantization_config=BitsAndBytesConfig(
+                load_in_4bit=True,
+                bnb_4bit_compute_dtype=torch.float32,
+                bnb_4bit_quant_type="nf4",
+        ),
+        max_memory={i: '30000MB' for i in range(ngpus)},
+        offload_folder="offload",
+        )
     print(model_type)
     if  model_type == 'Llama-2-7b-chat-hf':
-        model = AutoModelForCausalLM.from_pretrained(
-            model_name,
-            device_map="auto",
-            torch_dtype=dtype,
-            max_memory={i: '30000MB' for i in range(ngpus)},
-            offload_folder="offload",
-        )
+        
         print("Configuring for Llama2...")
         tokenizer.pad_token = tokenizer.decode([2])
         tokenizer.eos_token = tokenizer.decode([2])
@@ -244,21 +259,6 @@ def config_model(model_name, generate=True, dtype=torch.bfloat16):
         prompt_type="llama2"
     elif model_type  == 'Mistral-7B-Instruct-v0.2':
         print("Configuring for Mistral-v0.2...")
-        model = AutoModelForCausalLM.from_pretrained(
-            model_name,
-            device_map="auto",
-            torch_dtype=torch.float32,
-            quantization_config=BitsAndBytesConfig(
-            load_in_4bit=True,
-            bnb_4bit_compute_dtype=torch.float32,
-            bnb_4bit_quant_type="nf4",
-	),
-        max_memory={i: '30000MB' for i in range(ngpus)},
-        offload_folder="offload",
-        )
-        model.config.max_sequence_length = 4096
-        tokenizer.pad_token = tokenizer.decode([2])
-        tokenizer.eos_token = tokenizer.decode([2])
 
         model.config.max_sequence_length = 4096 # HACK: Llama2 specific, the original code should be fixed as hf models don't store this information here anymore
         model.config.pad_token_id = 2

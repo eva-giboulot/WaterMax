@@ -25,7 +25,7 @@ def parse_arguments():
     parser.add_argument('--mode', type=str, default='sentence-wm')
     parser.add_argument('--seed', type=int)
     parser.add_argument('--ngram', type=int, default=8)
-    parser.add_argument('--model_name', type=str, default='meta-llama/Llama-2-7b-chat-hf')
+    parser.add_argument('--model_name', type=str, default='mistralai/Mistral-7B-Instruct-v0.2')
     parser.add_argument('--outputdir', type=str, default='results/benchmark/')
     parser.add_argument('--standard_outputpath', type=str, default='./MarkMyWords/run/benchmark/')
 

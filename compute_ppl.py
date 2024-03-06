@@ -15,7 +15,7 @@ def parse_arguments():
     parser.add_argument('--wm', type=str, default='kirch')
     parser.add_argument('--seed', type=int)
     parser.add_argument('--ngram', type=int, default=8)
-    parser.add_argument('--generator_name', type=str, default='meta-llama/Llama-2-7b-chat-hf')
+    parser.add_argument('--generator_name', type=str, default='mistralai/Mistral-7B-Instruct-v0.2')
     parser.add_argument('--oracle_name', type=str, default='facebook/opt-2.7b')
     parser.add_argument('--batch_size', type=int, default=10)
 

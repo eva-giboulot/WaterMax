@@ -59,6 +59,21 @@ Install the required packages using pip:
   pip install -r requirements.txt
   ```
 
+The main results of this paper use the [HuggingFace weights of LLama-2](https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.2) which require accepting the Meta License.
+In order to facilitate the use of the model, we advise downloading the model locally:
+
+```sh
+# Make sure you have git-lfs installed (https://git-lfs.com)
+git lfs install
+
+# Make sure your SSH key is properly setup in your user settings.
+
+# https://huggingface.co/settings/keys
+
+git clone git@hf.co:mistralai/Mistral-7B-Instruct-v0.2
+```
+
+Alternatively, we also support out-of-the-box the use of the Mistral-7b model by setting *--model-name* to **mistralai/Mistral-7B-Instruct-v0.2**.
 
 
 
@@ -69,17 +84,17 @@ Install the required packages using pip:
 From the root of the repository:
 
 ```sh
-python watermax.py  --generate --detect --seed=[Seed of the PRNG] --ngram=[Hash window size] --n=[Number of drafts per chunks] --N=[Number of chunks] --prompts [prompts | path to text file ending in .txt]
+python watermax.py  --generate --detect --model_name [PATH_TO_LLAMA2]/Llama-2-7b-chat-hf --seed=[Seed of the PRNG] --ngram=[Hash window size] --n=[Number of drafts per chunks] --N=[Number of chunks] --prompts [prompts | path to text file ending in .txt]
 ```
 
 This will generate a watermark text using WaterMax and run it through the base detector. Both a path to a *.txt* file containg one prompt per line or a list of prompts can be used:
 
 ```sh
-python watermax.py  --generate --detect --seed=815 --ngram=4 --n=2 --N=2 --prompts data/test_prompts
+python watermax.py  --generate --detect --model_name [PATH_TO_LLAMA2]/Llama-2-7b-chat-hf --seed=815 --ngram=4 --n=2 --N=2 --prompts data/test_prompts
 ```
 
 ```sh
-python watermax.py  --generate --detect --seed=815 --ngram=4 --n=2 --N=2 --prompts "What was Spinoza's relationship with Leibniz?" "Which philospher spoke about the multicolored cow?"
+python watermax.py  --generate --detect --seed=815 --model_name [PATH_TO_LLAMA2]/Llama-2-7b-chat-hf --ngram=4 --n=2 --N=2 --prompts "What was Spinoza's relationship with Leibniz?" "Which philospher spoke about the multicolored cow?"
 
 ```
 
@@ -87,7 +102,7 @@ python watermax.py  --generate --detect --seed=815 --ngram=4 --n=2 --N=2 --promp
 From the root of the repository:
 
 ``` sh
-python test_sentence_wm.py --mode sentence-wm --model_name [path to llama2]/Llama-2-7b-chat-hf --generate --detect --seed 815 --ngram 4 --param1 [number of drafts per chunks] --param2 [number of chunks] --batch_size 1 --benches story_reports fake_news invented_stories c4                  
+python test_sentence_wm.py --mode sentence-wm --model_name [PATH_TO_LLAMA2]/Llama-2-7b-chat-hf --generate --detect --seed 815 --ngram 4 --param1 [number of drafts per chunks] --param2 [number of chunks] --batch_size 1 --benches story_reports fake_news invented_stories c4                  
 
 ```
 
@@ -108,11 +123,11 @@ The *test_sentence_wm.py* script allows to perform 6 different operations:
 Besides LLM ratings, perplexity and MAUVE scores can be computed using:
 
 ```sh
-python compute_ppl.py --wm [watermark algorithm] --seed 1015 --ngram 4 --model_name [path to llama2]/Llama-2-7b-chat-hf  --param1 [param 1] --param2= [param2] --benches fake_news story_reports invented_stories
+python compute_ppl.py --wm [watermark algorithm] --seed 1015 --ngram 4 --model_name [PATH_TO_LLAMA2]/Llama-2-7b-chat-hf  --param1 [param 1] --param2= [param2] --benches fake_news story_reports invented_stories
 ```
 
 ```sh
-python compute_mauve.py --wm [watermark algorithm] --seed 1015 --ngram 4 --model_name [path to llama2]/Llama-2-7b-chat-hf  --param1 [param 1] --param2= [param2] --benches fake_news story_reports invented_stories
+python compute_mauve.py --wm [watermark algorithm] --seed 1015 --ngram 4 --model_name [PATH_TO_LLAMA2]/Llama-2-7b-chat-hf  --param1 [param 1] --param2= [param2] --benches fake_news story_reports invented_stories
 ```
 
 
