@@ -12,10 +12,10 @@ from os import path
 
 def opt_int_or_float(n:str) -> Union[float,int,None]:
     if n.isdigit():
-        print("Is int !") 
+        #print("Is int !") 
         return(int(n))
     elif n.replace('.','',1).isdigit() and n.count('.') < 2:
-        print("Is float !") 
+        #print("Is float !") 
         return(float(n))
     elif n is None:
         return None

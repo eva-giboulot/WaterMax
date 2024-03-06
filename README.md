@@ -75,7 +75,7 @@ git clone git@hf.co:mistralai/Mistral-7B-Instruct-v0.2
 
 Alternatively, the default model used by the scripts is [**mistralai/Mistral-7B-Instruct-v0.2**](https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.2).
 
-By default, *bfloat16* tensors are used, this might not be compatible with some GPUs. In this case, add **--fp16** or **--fp32** to the function call to use standard floating-point tensor types. Similarly, quantized weights can be used by adding the **--quantize** argument.
+By default, *bfloat16* tensors are used, this might not be compatible with some GPUs or sometimes leading to slow inference. In this case, use the **--fp16** or **--fp32** arguments to use standard floating-point tensor types. Similarly, quantized weights can be used by adding the **--quantize** argument.
 
 <!-- USAGE EXAMPLES -->
 ## Usage
@@ -84,17 +84,17 @@ By default, *bfloat16* tensors are used, this might not be compatible with some 
 From the root of the repository:
 
 ```sh
-python watermax.py  --generate --detect --seed=[Seed of the PRNG] --ngram=[Hash window size] --n=[Number of drafts per chunks] --N=[Number of chunks] --prompts [prompts | path to text file ending in .txt]
+python watermax.py  --generate --detect --seed=[Seed of the PRNG] --ngram=[Hash window size] --n=[Number of drafts per chunks] --N=[Number of chunks] --gen_len [Max size of generated text] --fp16 --prompts [prompts | path to text file ending in .txt]
 ```
 
 This will generate a watermark text using WaterMax and run it through the base detector. Both a path to a *.txt* file containg one prompt per line or a list of prompts can be used:
 
 ```sh
-python watermax.py  --generate --detect --seed=815 --ngram=4 --n=2 --N=2 --prompts data/test_prompts.txt
+python watermax.py  --generate --detect --seed=815 --ngram=4 --n=2 --N=2 --fp16  --prompts data/test_prompts.txt
 ```
 
 ```sh
-python watermax.py  --generate --detect --seed=815 --ngram=4 --n=2 --N=2 --prompts "What was Spinoza's relationship with Leibniz?" "Which philospher spoke about the multicolored cow?"
+python watermax.py  --generate --detect --seed=815 --ngram=4 --n=2 --N=2 --fp16  --prompts "What was Spinoza's relationship with Leibniz?" "Which philospher spoke about the multicolored cow?"
 
 ```
 

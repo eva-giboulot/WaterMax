@@ -31,7 +31,7 @@ def parse_arguments():
     parser.add_argument('--beam_search', action=argparse.BooleanOptionalAction) # Only compatible with WaterMax
     parser.add_argument('--batch_size', type=int, default=1)
 
-    parser.add_argument('--gen_len', type=int, default=1024) #Size of the generated text
+    parser.add_argument('--gen_len', type=int, default=256) #Size of the generated text
 
     parser.add_argument('--generate', action=argparse.BooleanOptionalAction)
     parser.add_argument('--detect', action=argparse.BooleanOptionalAction)

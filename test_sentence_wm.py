@@ -66,7 +66,7 @@ def get_generator(model, tokenizer, args):
     elif args.mode == 'nowm':
         generator = WmGenerator(model, tokenizer, ngram=args.ngram, seed=args.seed)
     elif args.mode == 'kirch':
-        generator = MarylandGenerator(model, tokenizer, ngram=args.ngram, delta=args.param1, gamma=args.param2,seed=args.seed)
+        generator = MarylandGenerator(model, tokenizer, ngram=args.ngram, delta=args.param1, gam=args.param2,seed=args.seed)
     elif args.mode == 'aaronson':
         generator = OpenaiGenerator(model, tokenizer, ngram=args.ngram, theta=args.param1,seed=args.seed)
     else:
