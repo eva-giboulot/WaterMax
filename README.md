@@ -131,11 +131,11 @@ The *test_sentence_wm.py* script allows to perform 6 different operations:
 Besides LLM ratings, perplexity and MAUVE scores can be computed using:
 
 ```sh
-python compute_ppl.py --wm [watermark algorithm] --seed 1015 --ngram 4 --model_name [PATH_TO_LLAMA2]/Llama-2-7b-chat-hf  --param1 [param 1] --param2= [param2] --benches fake_news story_reports invented_stories
+python compute_ppl.py --wm [watermark algorithm] --seed 1015 --ngram 4 --generator_name Llama-2-7b-chat-hf  --param1 [param1] --param2= [param2] --benches fake_news story_reports invented_stories
 ```
 
 ```sh
-python compute_mauve.py --wm [watermark algorithm] --seed 1015 --ngram 4 --model_name [PATH_TO_LLAMA2]/Llama-2-7b-chat-hf  --param1 [param 1] --param2= [param2] --benches fake_news story_reports invented_stories
+python compute_mauve.py --wm [watermark algorithm] --seed 1015 --ngram 4 --model_name Llama-2-7b-chat-hf  --param1 [param1] --param2= [param2] --benches fake_news story_reports invented_stories
 ```
 
 
