@@ -204,7 +204,7 @@ if __name__ == '__main__':
     
     if args.prompts[0].endswith(".txt"):
         print("Loading prompts from txt file")
-        with open(args.prompts, 'r') as f:
+        with open(args.prompts[0], 'r') as f:
             prompts = [standardize(model_name.split('/')[-1], sys_prompt, user_prompt) for user_prompt in f] 
             print(prompts)
     else:

@@ -101,7 +101,7 @@ python watermax.py  --generate --detect --seed=815 --ngram=4 --n=2 --N=2 --promp
 By default, **mistralai/Mistral-7B-Instruct-v0.2** is used. You can specify another model by using the **--model_name** argument:
 
 ```sh
-python watermax.py --model_name [PATH_TO_MODEL]--generate --detect --seed=815 --ngram=4 --n=2 --N=2 --prompts data/test_prompts.txt
+python watermax.py --model_name [PATH_TO_MODEL] --generate --detect --seed=815 --ngram=4 --n=2 --N=2 --prompts data/test_prompts.txt
 ```
 
 The argument accepts both local paths and HuggingFace identifiers.
