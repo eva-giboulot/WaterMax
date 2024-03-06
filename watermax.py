@@ -39,6 +39,8 @@ def parse_arguments():
     parser.add_argument('--detect_robust', action=argparse.BooleanOptionalAction)
     parser.add_argument('--fp32', action=argparse.BooleanOptionalAction)
     parser.add_argument('--fp16', action=argparse.BooleanOptionalAction)
+    parser.add_argument('--quantize', action=argparse.BooleanOptionalAction)
+
 
     parser.add_argument('--prompts', nargs='+', type=str, default='Tell me about Deleuze concept of body without organs.')
 
@@ -212,7 +214,7 @@ if __name__ == '__main__':
     if args.fp32: dtype= torch.float32
     elif args.fp16: dtype = torch.float16
     else: dtype= torch.bfloat16
-    tokenizer, model,_ = config_model(model_name,args.generate or args.rate,dtype=dtype)
+    tokenizer, model,_ = config_model(model_name,args.generate or args.rate,dtype=dtype, quantize=args.quantize)
 
 
 

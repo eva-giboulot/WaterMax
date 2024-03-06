@@ -73,9 +73,9 @@ git lfs install
 git clone git@hf.co:mistralai/Mistral-7B-Instruct-v0.2
 ```
 
-Alternatively, we also support out-of-the-box the use of the Mistral-7b model by setting *--model-name* to **mistralai/Mistral-7B-Instruct-v0.2**.
+Alternatively, the default model used by the scripts is [**mistralai/Mistral-7B-Instruct-v0.2**](https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.2).
 
-
+By default, *bfloat16* tensors are used, this might not be compatible with some GPUs. In this case, add **--fp16** or **--fp32** to the function call to use standard floating-point tensor types. Similarly, quantized weights can be used by adding the **--quantize** argument.
 
 <!-- USAGE EXAMPLES -->
 ## Usage
@@ -84,19 +84,27 @@ Alternatively, we also support out-of-the-box the use of the Mistral-7b model by
 From the root of the repository:
 
 ```sh
-python watermax.py  --generate --detect --model_name [PATH_TO_LLAMA2]/Llama-2-7b-chat-hf --seed=[Seed of the PRNG] --ngram=[Hash window size] --n=[Number of drafts per chunks] --N=[Number of chunks] --prompts [prompts | path to text file ending in .txt]
+python watermax.py  --generate --detect --seed=[Seed of the PRNG] --ngram=[Hash window size] --n=[Number of drafts per chunks] --N=[Number of chunks] --prompts [prompts | path to text file ending in .txt]
 ```
 
 This will generate a watermark text using WaterMax and run it through the base detector. Both a path to a *.txt* file containg one prompt per line or a list of prompts can be used:
 
 ```sh
-python watermax.py  --generate --detect --model_name [PATH_TO_LLAMA2]/Llama-2-7b-chat-hf --seed=815 --ngram=4 --n=2 --N=2 --prompts data/test_prompts
+python watermax.py  --generate --detect --seed=815 --ngram=4 --n=2 --N=2 --prompts data/test_prompts.txt
 ```
 
 ```sh
-python watermax.py  --generate --detect --seed=815 --model_name [PATH_TO_LLAMA2]/Llama-2-7b-chat-hf --ngram=4 --n=2 --N=2 --prompts "What was Spinoza's relationship with Leibniz?" "Which philospher spoke about the multicolored cow?"
+python watermax.py  --generate --detect --seed=815 --ngram=4 --n=2 --N=2 --prompts "What was Spinoza's relationship with Leibniz?" "Which philospher spoke about the multicolored cow?"
 
 ```
+
+By default, **mistralai/Mistral-7B-Instruct-v0.2** is used. You can specify another model by using the **--model_name** argument:
+
+```sh
+python watermax.py --model_name [PATH_TO_MODEL]--generate --detect --seed=815 --ngram=4 --n=2 --N=2 --prompts data/test_prompts.txt
+```
+
+The argument accepts both local paths and HuggingFace identifiers.
 
 ### Benchmarking WaterMax
 From the root of the repository:
@@ -107,7 +115,7 @@ python test_sentence_wm.py --mode sentence-wm --model_name [PATH_TO_LLAMA2]/Llam
 ```
 
 Results from the main text can be replicated using the seed 815, results from the appendices use the seed 1015.
-By default, *bfloat16* tensors are used for Llama2, this might not be compatible with some GPUs. In this case, add **--fp16** or **--fp32** to the function call to use standard floating-point tensor types.
+
 #### Possible operations
 The *test_sentence_wm.py* script allows to perform 6 different operations:
 
@@ -153,6 +161,7 @@ Other algorithms can used by changing the **mode**, **param1** and **param2** ar
  |No watermark (Other schemes) | nowm | - | - |
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
+
 
 
 
