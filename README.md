@@ -138,7 +138,7 @@ python compute_ppl.py --wm [watermark algorithm] --seed 1015 --ngram 4 --gen_len
 python compute_mauve.py --wm [watermark algorithm] --seed 1015 --ngram 4 --gen_len [Max size of generated text] --model_name Llama-2-7b-chat-hf  --param1 [param1] --param2 [param2] --benches fake_news story_reports invented_stories
 ```
 
-Beware that MAUVE can only be computed for a given benchmark if non-watermarked texts have already been generated -- see "No watermark" in [Implemented algorithms].(#implemented-algorithms).
+Beware that MAUVE can only be computed for a given benchmark if non-watermarked texts have already been generated --- see "No watermark" in [Implemented algorithms](#implemented-algorithms).
 
 #### Reusing and extending
 The WaterMax generator and detector classes can be found in *models/wm.py*:
