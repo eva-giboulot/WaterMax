@@ -259,6 +259,8 @@ def config_model(model_name, generate=True, dtype=torch.bfloat16,quantize=False)
         prompt_type="llama2"
     elif model_type  == 'Mistral-7B-Instruct-v0.2':
         print("Configuring for Mistral-v0.2...")
+        tokenizer.pad_token = tokenizer.decode([2])
+        tokenizer.eos_token = tokenizer.decode([2])
 
         model.config.max_sequence_length = 4096 # HACK: Llama2 specific, the original code should be fixed as hf models don't store this information here anymore
         model.config.pad_token_id = 2
