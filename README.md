@@ -59,7 +59,7 @@ Install the required packages using pip:
   pip install -r requirements.txt
   ```
 
-The main results of this paper use the [HuggingFace weights of LLama-2](https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.2) which require accepting the Meta License.
+The main results of this paper use the [HuggingFace weights of LLama-2](https://huggingface.co/meta-llama/Llama-2-7b-chat-hf) which require accepting the Meta License.
 In order to facilitate the use of the model, we advise downloading the model locally:
 
 ```sh
@@ -70,7 +70,7 @@ git lfs install
 
 # https://huggingface.co/settings/keys
 
-git clone git@hf.co:mistralai/Mistral-7B-Instruct-v0.2
+git clone git@hf.co:meta-llama/Llama-2-7b-chat-hf
 ```
 
 Alternatively, the default model used by the scripts is [**mistralai/Mistral-7B-Instruct-v0.2**](https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.2).
@@ -138,6 +138,7 @@ python compute_ppl.py --wm [watermark algorithm] --seed 1015 --ngram 4 --gen_len
 python compute_mauve.py --wm [watermark algorithm] --seed 1015 --ngram 4 --gen_len [Max size of generated text] --model_name Llama-2-7b-chat-hf  --param1 [param1] --param2 [param2] --benches fake_news story_reports invented_stories
 ```
 
+Beware that MAUVE can only be computed for a given benchmark if non-watermarked texts have already been generated -- see "No watermark" in [Implemented algorithms].(#implemented-algorithms).
 
 #### Reusing and extending
 The WaterMax generator and detector classes can be found in *models/wm.py*:
@@ -154,7 +155,7 @@ See *config_model* in *misc/helpers.py* to change how a model is loaded. **Note 
 Other algorithms can used by changing the **mode**, **param1** and **param2** arguments. Note that WaterMax uses the HuggingFace API whereas the other schemes are based on Meta's Llama implementation, hence the different parameters for generating texts without watermarks.
  | Watermark | --mode | --param1 | --param2 | 
  ---|---|---|---|
- |WaterMax | sentence-wm | $n$: Number of drafts per chunk | $N$: Number of chunks |
+ |[WaterMax]() | sentence-wm | $n$: Number of drafts per chunk | $N$: Number of chunks |
  |[Kirchenbauer et al.](https://arxiv.org/abs/2301.10226)| kirch | $\delta$:  bias to the logits | $\gamma$: ratio of green-list tokens |
  |[Aaronson et al.](https://scottaaronson.blog/?m=202302)| aaronson | $\theta$: temperature |  - |
  |No watermark (WaterMax)| sentence-wm | 1 |  1  |
