@@ -84,7 +84,7 @@ By default, *bfloat16* tensors are used, this might not be compatible with some 
 From the root of the repository:
 
 ```sh
-python watermax.py  --generate --detect --seed=[Seed of the PRNG] --ngram=[Hash window size] --n=[Number of drafts per chunks] --N=[Number of chunks] --gen_len [Max size of generated text] --fp16 --prompts [prompts | path to text file ending in .txt]
+python watermax.py  --generate --detect --seed [Seed of the PRNG] --ngram [Hash window size] --n [Number of drafts per chunks] --N [Number of chunks] --gen_len [Max size of generated text] --fp16 --prompts [prompts | path to text file ending in .txt]
 ```
 
 This will generate a watermark text using WaterMax and run it through the base detector. Both a path to a *.txt* file containg one prompt per line or a list of prompts can be used:
@@ -131,11 +131,11 @@ The *test_sentence_wm.py* script allows to perform 6 different operations:
 Besides LLM ratings, perplexity and MAUVE scores can be computed using:
 
 ```sh
-python compute_ppl.py --wm [watermark algorithm] --seed 1015 --ngram 4 --generator_name Llama-2-7b-chat-hf  --param1 [param1] --param2= [param2] --benches fake_news story_reports invented_stories
+python compute_ppl.py --wm [watermark algorithm] --seed 1015 --ngram 4 --gen_len [Max size of generated text] --generator_name Llama-2-7b-chat-hf  --param1 [param1] --param2 [param2] --benches fake_news  story_reports invented_stories
 ```
 
 ```sh
-python compute_mauve.py --wm [watermark algorithm] --seed 1015 --ngram 4 --model_name Llama-2-7b-chat-hf  --param1 [param1] --param2= [param2] --benches fake_news story_reports invented_stories
+python compute_mauve.py --wm [watermark algorithm] --seed 1015 --ngram 4 --gen_len [Max size of generated text] --model_name Llama-2-7b-chat-hf  --param1 [param1] --param2 [param2] --benches fake_news story_reports invented_stories
 ```
 
 
