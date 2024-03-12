@@ -293,6 +293,8 @@ def config_model(model_name, generate=True, dtype=torch.bfloat16,quantize=False)
     
         
     return(tokenizer, model,prompt_type)
+
+
 def standardize(model, sys, user):
     """ Return a standardized version of the prompt for a given model """
 

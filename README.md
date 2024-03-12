@@ -33,9 +33,9 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-This repository is the official implementation of the [WaterMax algorithm](), a LLM watermarking scheme which allows to reach high detectability at close to no cost to text quality and robustness. The repository contains both the generator and detector. It also provides the implementation of other SOTA watermarkings schemes, using the implementation of  [Three Bricks to Consolidate Watermarks for LLMs](https://github.com/facebookresearch/three_bricks).
+This repository is the official implementation of the [WaterMax algorithm](), a LLM watermarking scheme allowing to reach high detectability at close to no cost to text quality and robustness. The repository contains both the generator and detector. It also provides the implementation of other SOTA watermarkings schemes, using the implementation of [Three Bricks to Consolidate Watermarks for LLMs](https://github.com/facebookresearch/three_bricks).
 
-The code allows the replication of the results of the original WaterMax publication.
+In particular, the code allows the replication of the results of the original WaterMax publication -- see [Benchmarking WaterMax](#benchmarking-watermax).
 
 Finally, we provide helper functions to make benchmarking compatible with the [Mark My Words](https://github.com/wagner-group/MarkMyWords) benchmark.
 
@@ -75,7 +75,7 @@ git clone git@hf.co:meta-llama/Llama-2-7b-chat-hf
 
 Alternatively, the default model used by the scripts is [**mistralai/Mistral-7B-Instruct-v0.2**](https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.2).
 
-By default, *bfloat16* tensors are used, this might not be compatible with some GPUs or sometimes leading to slow inference. In this case, use the **--fp16** or **--fp32** arguments to use standard floating-point tensor types. Similarly, quantized weights can be used by adding the **--quantize** argument.
+By default, *bfloat16* tensors are used, this might not be compatible with some GPUs or, sometimes, lead to slow inference. In this case, use the **--fp16** or **--fp32** arguments to use standard floating-point tensor types. Similarly, quantized weights can be used by adding the **--quantize** argument.
 
 <!-- USAGE EXAMPLES -->
 ## Usage
@@ -192,11 +192,13 @@ Distributed under a CC-BY-NC license. See [LICENSE](LICENSE.txt) for more inform
 If you find this repository useful, please consider giving a star ⭐ and please cite as:
 
 ```
-@article{giboulotwatermax2024,
-  title={WaterMax: breaking the LLM watermark detectability-robustness-quality trade-off},
-  author={Giboulot, Eva and Furon, Teddy},
-  journal={},
-  year={2024}
+@misc{giboulot2024watermax,
+      title={WaterMax: breaking the LLM watermark detectability-robustness-quality trade-off}, 
+      author={Eva Giboulot and Furon Teddy},
+      year={2024},
+      eprint={2403.04808},
+      archivePrefix={arXiv},
+      primaryClass={cs.CR}
 }
 ```
 

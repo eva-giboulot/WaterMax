@@ -155,6 +155,7 @@ class WmDetector():
     def get_pvalue(self, score: float, ntoks: int, eps: float):
         """ compute the p-value for a couple of score and number of tokens """
         raise NotImplementedError
+
 class WmGenerator():
     def __init__(self, 
             model: LlamaForCausalLM, 
