@@ -33,7 +33,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-This repository is the official implementation of the [WaterMax algorithm](), a LLM watermarking scheme allowing to reach high detectability at close to no cost to text quality and robustness. The repository contains both the generator and detector. It also provides the implementation of other SOTA watermarkings schemes, using the implementation of [Three Bricks to Consolidate Watermarks for LLMs](https://github.com/facebookresearch/three_bricks).
+This repository is the official implementation of the [WaterMax algorithm](https://arxiv.org/abs/2403.04808), a LLM watermarking scheme allowing to reach high detectability at close to no cost to text quality and robustness. The repository contains both the generator and detector. It also provides the implementation of other SOTA watermarkings schemes, using the implementation of [Three Bricks to Consolidate Watermarks for LLMs](https://github.com/facebookresearch/three_bricks).
 
 In particular, the code allows the replication of the results of the original WaterMax publication -- see [Benchmarking WaterMax](#benchmarking-watermax).
 
@@ -155,7 +155,7 @@ See *config_model* in *misc/helpers.py* to change how a model is loaded. **Note 
 Other algorithms can used by changing the **mode**, **param1** and **param2** arguments. Note that WaterMax uses the HuggingFace API whereas the other schemes are based on Meta's Llama implementation, hence the different parameters for generating texts without watermarks.
  | Watermark | --mode | --param1 | --param2 | 
  ---|---|---|---|
- |[WaterMax]() | sentence-wm | $n$: Number of drafts per chunk | $N$: Number of chunks |
+ |[WaterMax](https://arxiv.org/abs/2403.04808) | sentence-wm | $n$: Number of drafts per chunk | $N$: Number of chunks |
  |[Kirchenbauer et al.](https://arxiv.org/abs/2301.10226)| kirch | $\delta$:  bias to the logits | $\gamma$: ratio of green-list tokens |
  |[Aaronson et al.](https://scottaaronson.blog/?m=202302)| aaronson | $\theta$: temperature |  - |
  |No watermark (WaterMax)| sentence-wm | 1 |  1  |
