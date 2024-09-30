@@ -25,7 +25,7 @@ Finally, we provide helper functions to make benchmarking compatible with the [M
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
-
+**Update 30-09-2024**: The repository is now public again following the end of the review process for Neurips 2024. Several improvements have been made wich strongly increase the efficiency of WaterMax with almost no impact to text quality. In order to use the most-powerful variant of WaterMax, use the **--beam_chunk_size** argument (advised values between 4 and 6). The preprint has been updated on the arXiv.  
 
 
 
@@ -116,14 +116,14 @@ Note that attacks on the watermark texts were performed using the [Mark My Words
 Besides LLM ratings, perplexity, MAUVE and ROUGE scores can be computed using:
 
 ```sh
-python compute_ppl.py --wm [watermark algorithm] --seed 1015 --ngram 4 --gen_len [Max size of generated text] --generator_name Llama-2-7b-chat-hf  --param1 [param1] --param2 [param2] --benches fake_news  story_reports invented_stories
+python compute_ppl.py --wm [watermark algorithm] --seed 1015 --ngram 6 --gen_len [Max size of generated text] --generator_name Llama-2-7b-chat-hf  --param1 [param1] --param2 [param2] --benches fake_news  story_reports invented_stories
 ```
 
 ```sh
-python compute_mauve.py --wm [watermark algorithm] --seed 1015 --ngram 4 --gen_len [Max size of generated text] --model_name Llama-2-7b-chat-hf  --param1 [param1] --param2 [param2] --benches fake_news story_reports invented_stories
+python compute_mauve.py --wm [watermark algorithm] --seed 1015 --ngram 6 --gen_len [Max size of generated text] --model_name Llama-2-7b-chat-hf  --param1 [param1] --param2 [param2] --benches fake_news story_reports invented_stories
 ```
 ```sh
-python compute_rouge.py --wm [watermark algorithm] --seed 1015 --ngram 4 --gen_len [Max size of generated text] --model_name Llama-2-7b-chat-hf  --param1 [param1] --param2 [param2] --benches fake_news story_reports invented_stories
+python compute_rouge.py --wm [watermark algorithm] --seed 1015 --ngram 6 --gen_len [Max size of generated text] --model_name Llama-2-7b-chat-hf  --param1 [param1] --param2 [param2] --benches fake_news story_reports invented_stories
 ```
 
 Beware that MAUVE can only be computed for a given benchmark if non-watermarked texts have already been generated --- see "No watermark" in [Implemented algorithms](#implemented-algorithms).
