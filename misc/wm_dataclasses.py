@@ -64,6 +64,7 @@ class WmConfig:
     wm : str
     mode: Optional[str] = None
     beam_search: Optional[bool] = False
+    beam_chunk_size: Optional[int] = 0
 
     def __post_init__(self):
         self.mode = self.wm
@@ -342,3 +343,24 @@ class DATA_Generation:
                 if generations is not None and len(generations):
                     outfile.write("\n".join(str(g) for g in generations) + "\n")
 
+@dataclass
+class DATA_Watermark:
+    mode: str
+    bench: str
+    tokenizer: str
+    gen_len: int
+    param1: int_or_float
+    param2: int_or_float
+    ngram:int
+    temperature: float
+    seed: int
+    beam_chunk_size: Optional[int] = 0
+    bcs: Optional[int] = 0
+
+    beam_search = False
+
+    def __post_init__(self):
+        if self.bcs == 0 and self.beam_chunk_size !=0:
+            self.bcs = self.beam_chunk_size
+        elif self.bcs != 0 and self.beam_chunk_size ==0:
+            self.beam_chunk_size = self.bcs

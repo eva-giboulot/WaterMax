@@ -1,7 +1,7 @@
 from os import path
 import argparse
 
-from models.wm import MarylandDetector,SecureGaussianSentenceWm,GaussianSentenceWm,OpenaiDetector
+from models.wm import MarylandDetector,SecureGaussianSentenceWm,GaussianSentenceWm,OpenaiDetector,NewGaussianSentenceWm
 from misc.wm_dataclasses import WmConfig, int_or_float, opt_int_or_float
 from misc.helpers import load_json,get_filename,config_model,generate_json_filenames
 
@@ -27,6 +27,8 @@ def parse_arguments():
 
     parser.add_argument('--param1', type=int_or_float) 
     parser.add_argument('--param2', type=opt_int_or_float, default=None) 
+    parser.add_argument('--beam_chunk_size', type=int, default=0) 
+
     parser.add_argument('--temperature', type=float, default=1.) #Temperature
 
     parser.add_argument('--gen_len', type=int, default=1024) #Size of the generated text
@@ -56,7 +58,7 @@ def get_detector(tokenizer, config,robust=False):
         if  robust:
             detector = SecureGaussianSentenceWm(tokenizer, ngram=config.ngram, seed=config.seed)
         else:
-            detector = GaussianSentenceWm(tokenizer, ngram=config.ngram, seed=config.seed,split_len=config.gen_len//config.param2)
+            detector = NewGaussianSentenceWm(tokenizer, ngram=config.ngram, seed=config.seed,split_len=config.gen_len//config.param2)
     else:
         raise Exception("Unknown watermark scheme")
     
@@ -80,7 +82,9 @@ def compute_all_scores(detector, scoring_method, config,res_path,outpath):
 def main():
     args = parse_arguments().parse_args()
     res_path = path.join(args.res_path,args.model_name.split('/')[-1]) 
-    config = WmConfig(seed=args.seed, param1=args.param1, param2=args.param2, bench=args.bench, ngram=args.ngram, temperature=args.temperature, wm=args.wm,gen_len=args.gen_len)
+    config = WmConfig(seed=args.seed, param1=args.param1, param2=args.param2, 
+                      bench=args.bench, ngram=args.ngram, temperature=args.temperature, wm=args.wm,gen_len=args.gen_len,
+                      beam_chunk_size=args.beam_chunk_size)
 
     if args.robust:
         config.mode = f"robust-{config.wm}"

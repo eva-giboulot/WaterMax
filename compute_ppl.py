@@ -18,6 +18,8 @@ def parse_arguments():
     parser.add_argument('--generator_name', type=str, default='mistralai/Mistral-7B-Instruct-v0.2')
     parser.add_argument('--oracle_name', type=str, default='facebook/opt-2.7b')
     parser.add_argument('--batch_size', type=int, default=10)
+    parser.add_argument('--beam_chunk_size', type=int, default=0) 
+
 
     parser.add_argument('--res_path', type=str, default='./results/benchmark')
 
@@ -50,7 +52,8 @@ def main():
     tokenizer,model,_ = config_model(args.oracle_name, True)
     print(args.benches)
     for bench in args.benches:
-        config = WmConfig(seed=args.seed, param1=args.param1, param2=args.param2, bench=bench, ngram=args.ngram, temperature=args.temperature, wm=args.wm,gen_len=args.gen_len)
+        config = WmConfig(seed=args.seed, param1=args.param1, param2=args.param2, bench=bench, ngram=args.ngram,
+                           temperature=args.temperature, wm=args.wm,gen_len=args.gen_len,beam_chunk_size=args.beam_chunk_size)
         prompts, texts, base_ppls = compute_ppl(tokenizer, model, config,res_path,batch_size=args.batch_size)
         
         jsondir =path.join(res_path, generate_json_filenames(config, prefix='results_ppl_', suffix='_' + args.oracle_name.split('/')[-1], ext='.jsonl'))

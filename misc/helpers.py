@@ -56,8 +56,7 @@ def load_rating_prompt(json_path):
             qprompt.append(format_quality_prompt(prompt, result))
     return(qprompt)
 
-
-def generate_prompts(bench, model_name):
+def generate_prompts(bench, model_name,tokenizer=None):
 
     if bench == 'fake_news':
         system_prompt = "You are a helpful assistant. Always respond with realistic yet invented articles."
@@ -209,14 +208,13 @@ def generate_prompts(bench, model_name):
         raise NotImplementedError("Unimplemented benchmark")
     
     raw_prompts = [(prompt.format(*topic), system_prompt) for topic in topics]
-    prompts_std= [standardize(model_name, s, p) for p,s in raw_prompts]
+    prompts_std= [standardize(model_name, s, p,tokenizer=tokenizer) for p,s in raw_prompts]
     return(prompts_std)
-
 
 # MODEL standardization
 def config_model(model_name, generate=True, dtype=torch.bfloat16,quantize=False):
     ngpus = torch.cuda.device_count()
-    tokenizer = AutoTokenizer.from_pretrained(model_name,model_max_length=4096,padding_side='left')
+    tokenizer = AutoTokenizer.from_pretrained(model_name,model_max_length=4096,padding_side='left',trust_remote_code=True)
     if not generate: return(tokenizer, None,None)
 
    
@@ -230,7 +228,9 @@ def config_model(model_name, generate=True, dtype=torch.bfloat16,quantize=False)
                 device_map="auto",
                 torch_dtype=dtype,
                 offload_folder="offload",
+                trust_remote_code=True,
             )
+        model.config.max_sequence_length = 4096
     else:
         model = AutoModelForCausalLM.from_pretrained(
                 model_name,
@@ -257,6 +257,19 @@ def config_model(model_name, generate=True, dtype=torch.bfloat16,quantize=False)
         model.config.unk_token_id = 0
         model.config.eos_token_id = 2 # </s> which closes the response from the LLM for llama2 architectures: https://huggingface.co/blog/llama2#how-to-prompt-llama-2
         prompt_type="llama2"
+
+    elif  model_type == 'Meta-Llama-3-8B-Instruct' or model_type == 'Meta-Llama-3.1-70B-Instruct'  :
+        
+        print("Configuring for Llama3...")
+        tokenizer.pad_token = tokenizer.decode([128001])
+        tokenizer.eos_token = tokenizer.decode([128001])
+
+        model.config.max_sequence_length = 4096 # HACK: Llama2 specific, the original code should be fixed as hf models don't store this information here anymore
+
+        model.config.pad_token_id = 128001
+        model.config.unk_token_id = 128002
+        model.config.eos_token_id = 128001 # </s> which closes the response from the LLM for llama2 architectures: https://huggingface.co/blog/llama2#how-to-prompt-llama-2
+        prompt_type="llama3"
     elif model_type  == 'Mistral-7B-Instruct-v0.2':
         print("Configuring for Mistral-v0.2...")
         tokenizer.pad_token = tokenizer.decode([2])
@@ -275,12 +288,6 @@ def config_model(model_name, generate=True, dtype=torch.bfloat16,quantize=False)
             offload_folder="offload",
             )
     else:
-        model = AutoModelForCausalLM.from_pretrained(
-            model_name,
-            device_map="auto",
-            torch_dtype=dtype,
-            offload_folder="offload",
-            )
         print("Unknown model!")
         #return(None,None,None)
     
@@ -295,21 +302,33 @@ def config_model(model_name, generate=True, dtype=torch.bfloat16,quantize=False)
     return(tokenizer, model,prompt_type)
 
 
-def standardize(model, sys, user):
+def standardize(model, sys, user,tokenizer=None):
     """ Return a standardized version of the prompt for a given model """
-
-    if "llama" in model.lower()  or "mistral" in model.lower() and sys:
+    if  "meta-llama-3" in model.lower():
+        messages = [
+    {"role": "system", "content": sys},
+    {"role": "user", "content": user},
+]
+        return(tokenizer.apply_chat_template(
+                messages,
+                add_generation_prompt=True,
+                tokenize=False))
+    elif "llama" in model.lower()  or "mistral" in model.lower():
         if sys:
             return f"[INST] <<SYS>> {sys} <</SYS>> {user} [/INST]"
         else:
             return f"[INST] {user} [/INST]"
 
-    if 'vicuna' in model or 'koala' in model:
+    elif 'vicuna' in model or 'koala' in model:
         if sys:
             return f"System: {sys}\nHuman: {user}\nAssistant:"
         else:
             return f"Human: {user}\nAssistant:"
-
+    elif 'phi' in model.lower():
+        if sys:
+            return f"<|system|> {sys} <|end|> \n <|user|> {user} <|end|> \n <|assistant|> "
+        else:
+            return f"<|user|> {user} <|end|> \n <|assistant|>"
     else:
         raise NotImplementedError(f"No known standardization for model {model}. \
                                   Please add it manually to utils/standardize.py")
@@ -360,13 +379,15 @@ def generate_json_filenames(args, prefix, suffix='', ext='.jsonl') -> str:
         if args.mode =='nowm':
             fname = f"{prefix}{args.bench}_{args.seed}_{args.mode}_{args.gen_len}_{args.ngram}_{args.temperature}{suffix}{ext}"
         else:
-            if args.beam_search and args.mode == 'sentence-wm': suffix + '_beam_search'
+            if args.beam_search and args.mode == 'sentence-wm': suffix += '_beam_search'
+            if args.mode == 'sentence-wm' and args.beam_chunk_size !=0: suffix += f'_bcs{args.beam_chunk_size}'
             if args.param2 is None:
                 fname = f"{prefix}{args.bench}_{args.seed}_{args.mode}_{args.param1}_{args.gen_len}_{args.ngram}_{args.temperature}{suffix}{ext}"
             else:
                 fname = f"{prefix}{args.bench}_{args.seed}_{args.mode}_{args.param1}_{args.param2}_{args.gen_len}_{args.ngram}_{args.temperature}{suffix}{ext}"
     else:
-        if args.beam_search and args.mode == 'sentence-wm': suffix + '_beam_search'
+        if args.beam_search and args.mode == 'sentence-wm': suffix += '_beam_search'
+        if args.mode == 'sentence-wm' and args.beam_chunk_size !=0: suffix += f'_bcs{args.beam_chunk_size}'
         if args.param2 is None:
             fname = f"{prefix}{args.seed}_{args.mode}_{args.param1}_{args.gen_len}_{args.ngram}_{args.temperature}{suffix}{ext}"
         else:
